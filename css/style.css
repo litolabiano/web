@@ -330,8 +330,15 @@ body { font-family: sans-serif; }
           overflow: hidden;
         }
 
-        .hero-bg{
+        .img-flip{
 
+          -webkit-transform: scaleX(-1);
+          transform: scaleX(-1);
+
+        }
+
+        .hero-bg{
+          height: 500px;
           background-size: contain;     
            background-repeat: no-repeat;
         }

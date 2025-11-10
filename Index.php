@@ -21,21 +21,39 @@
                 <div class="carousel-inner text-yellow h-auto">
                     <!-- Slide 1 -->
                       <div class="carousel-item active" >
-                          <div class="hero-bg p-5" style=" background-image: url('./Resources/1.png') !important;">
-                            <div class="py-auto">
-                                  <h1 class="display-1 fw-bold ">Empower Your Team</h1>
-                                  <p>Unlock productivity with our seamless tools. Collaborate effortlessly and achieve more in less time.</p>
-                            </div>
-                          </div>
+                          <div class="row">
+                             <div class="hero-bg p-5 col-6" style=" background-image: url('./Resources/1.png') !important;">
+ 
+                              </div>
+                                  <div class="py-auto z-1 position-absolute ">
+                                    <h1 class="display-1 fw-bold ">Empower Your Team</h1>
+                                    <p>Unlock productivity with our seamless tools. Collaborate effortlessly and achieve more in less time.</p>
+                                  </div> 
+
+                             <div class="hero-bg p-5 col-6 img-flip" style=" background-image: url('./Resources/1.png') !important;">
+
+                              
+                              </div>
+                         </div>
+
                       </div>
                       <!-- Slide 2 -->
                       <div class="carousel-item " >
-                          <div class="hero-bg p-5" style=" background-image: url('./Resources/5.png') !important;">
-                            <div class="py-auto">
-                              <h1 class="display-1 fw-bold ">Empower Your Team</h1>
-                              <p>Sign up for free and experience the future of work. Your success story starts here.</p>               
-                           </div>
-                          </div>
+                          <div class="row">
+                             <div class="hero-bg p-5 col-6" style=" background-image: url('./Resources/1.png') !important;">
+
+                              </div>
+                                  <div class="py-auto z-1 position-absolute ">
+                                    <h1 class="display-1 fw-bold ">Empower Your Team</h1>
+                                    <p>Unlock productivity with our seamless tools. Collaborate effortlessly and achieve more in less time.</p>
+                                  </div>  
+
+                             <div class="hero-bg p-5 col-6" style=" background-image: url('./Resources/1.png') !important;">
+
+                              
+                              </div>
+                         </div>
+
                       </div>
                       <!-- Slide 3 -->
                       <div class="carousel-item" >
