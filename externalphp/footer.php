@@ -1,15 +1,7 @@
 <!-- Enhanced & Responsive Footer -->
-<footer class="footer bg-green text-light shadow-lg py-5 mt-5">
+<footer class="footer bg-green text-light shadow-lg py-5 ">
   <div class="container">
-    <!-- Newsletter Section -->
-    <div class="newsletter text-center mb-5">
-      <h4 class="text-yellow fw-bold mb-3">Stay Connected!</h4>
-      <p class="mb-4">Subscribe to our newsletter for the latest job opportunities and updates.</p>
-      <form class="d-flex justify-content-center flex-wrap gap-2">
-        <input type="email" class="form-control rounded-pill px-3" placeholder="Enter your email" style="max-width: 300px;">
-        <button class="btn btn-warning rounded-pill px-4 fw-bold" type="submit">Subscribe</button>
-      </form>
-    </div>
+
 
     <!-- Footer Columns -->
     <div class="row text-center text-md-start g-4">

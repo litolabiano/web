@@ -1,5 +1,4 @@
 
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,89 +11,145 @@
         <?php include 'externalphp/chat.php'; ?>
 
     <header>
-      <section class="hero-section " >
-          <!-- Carousel Container -->
-          <div id="landingCarousel" class="carousel h-100 slide  " data-bs-ride="carousel">
-                <!-- Indicators -->
-              <div class=" container-fluid shadow-lg" style=" background-color: rgba(0, 0, 0, 0.28);">
-                <!-- Carousel Inner -->
-                <div class="carousel-inner text-yellow h-auto">
-                    <!-- Slide 1 -->
-                      <div class="carousel-item active" >
-                          <div class="row">
-                             <div class="hero-bg p-5 col-6" style=" background-image: url('./Resources/1.png') !important;">
- 
-                              </div>
-                                  <div class="py-auto z-1 position-absolute ">
-                                    <h1 class="display-1 fw-bold ">Empower Your Team</h1>
-                                    <p>Unlock productivity with our seamless tools. Collaborate effortlessly and achieve more in less time.</p>
-                                  </div> 
+<!-- --------------------------------------------------------------
+     HERO SECTION (single reusable component)
+--------------------------------------------------------------- -->
+<section class="hero-section position-relative">
+  <div id="landingCarousel" class="carousel slide" data-bs-ride="carousel">
 
-                             <div class="hero-bg p-5 col-6 img-flip" style=" background-image: url('./Resources/1.png') !important;">
+    <!-- ====================  INDICATORS  ==================== -->
+    <div class="carousel-indicators">
+      <button type="button" data-bs-target="#landingCarousel" data-bs-slide-to="0"
+              class="active" aria-current="true" aria-label="Slide 1"></button>
+      <button type="button" data-bs-target="#landingCarousel" data-bs-slide-to="1"
+              aria-label="Slide 2"></button>
+      <button type="button" data-bs-target="#landingCarousel" data-bs-slide-to="2"
+              aria-label="Slide 3"></button>
+    </div>
 
-                              
-                              </div>
-                         </div>
+    <!-- ====================  SLIDES  ==================== -->
+    <div class="carousel-inner">
 
-                      </div>
-                      <!-- Slide 2 -->
-                      <div class="carousel-item " >
-                          <div class="row">
-                             <div class="hero-bg p-5 col-6" style=" background-image: url('./Resources/1.png') !important;">
+      <!-- ----------  Slide 1  ---------- -->
+      <div class="carousel-item active">
+        <div class="hero-bg"
+             style="background-image:url('Resources/photo-1552664730-d307ca884978.avif');">
+          <div class="overlay"></div>
 
-                              </div>
-                                  <div class="py-auto z-1 position-absolute ">
-                                    <h1 class="display-1 fw-bold ">Empower Your Team</h1>
-                                    <p>Unlock productivity with our seamless tools. Collaborate effortlessly and achieve more in less time.</p>
-                                  </div>  
+          <div class="hero-content text-white text-start">
+            <h1 class="hero-title display-4 fw-bold">
+              Turn Your Ideas Into Reality <br> Fast, Easy, and Free.
+            </h1>
 
-                             <div class="hero-bg p-5 col-6" style=" background-image: url('./Resources/1.png') !important;">
+            <!-- reuse same search box markup -->
+            <div class="search-box mt-4 p-3 rounded-4 shadow-lg">
+              <div class="btn-group d-flex justify-content-center mb-3" role="group">
+                <button type="button"
+                        class="btn btn-light px-4 fw-semibold active"
+                        data-mode="talent">Find talent</button>
+                <button type="button"
+                        class="btn btn-dark px-4 fw-semibold"
+                        data-mode="jobs">Browse jobs</button>
+              </div>
 
-                              
-                              </div>
-                         </div>
-
-                      </div>
-                      <!-- Slide 3 -->
-                      <div class="carousel-item" >
-                          <div class="hero-bg p-5" style=" background-image: url('./Resources/6.png') !important;">
-                            <div class="py-auto">
-                                  <h1 class="display-1 fw-bold ">Get Started Now</h1>
-                                <p>Sign up for free and experience the future of work. Your success story starts here.</p>
-                            </div>
-                          </div>
-                      </div>
-                      <!-- Slide 4 -->
-                      <div class="carousel-item" >
-                          <div class="hero-bg p-5" style=" background-image: url('./Resources/1.png') !important;">
-                            <div class="py-auto">
-                              <h1 class="display-1 fw-bold " >Innovate with Confidence</h1>
-                                <p>Our cutting-edge features help you stay ahead of the curve. Build, test, and launch ideas faster than ever.</p>
-                            </div>
-                          </div>
-                      </div>
-                      <!-- Slide 5 -->
-                      <div class="carousel-item " >
-                          <div class="hero-bg p-5" style=" background-image: url('./Resources/1.png') !important;">
-                            <div class="py-auto">
-                                <h1 class="display-1 fw-bold ">Join the Community</h1>
-                                <p>Connect with like-minded professionals and grow together. Share insights and drive collective success.</p>
-                            </div>
-                          </div>
-                      </div>
-                  <!-- Previous/Next Controls -->
-                  <button class="carousel-control-prev opacity-0" type="button" data-bs-target="#landingCarousel" data-bs-slide="prev">
-                      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                      <span class="visually-hidden">Previous</span>
-                  </button>
-                  <button class="carousel-control-next  opacity-0" type="button" data-bs-target="#landingCarousel" data-bs-slide="next">
-                      <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                      <span class="visually-hidden">Next</span>
-                  </button>
-                </div>
+              <div class="input-group">
+                <input type="text"
+                       class="form-control py-3"
+                       placeholder="Search by role, skills, or keywords">
+                <button class="btn btn-success px-4 fw-bold">Search</button>
+              </div>
             </div>
           </div>
-      </section>
+        </div>
+      </div>
+
+      <!-- ----------  Slide 2  ---------- -->
+      <div class="carousel-item">
+        <div class="hero-bg"
+             style="background-image:url('Resources/photo-1522202176988-66273c2fd55f.avif');">
+          <div class="overlay"></div>
+
+          <div class="hero-content text-white text-start">
+            <h1 class="hero-title display-4 fw-bold">
+              Turn Your Ideas Into Reality <br> Fast, Easy, and Free.
+            </h1>
+     
+
+            <!-- reuse same search box markup -->
+            <div class="search-box mt-4 p-3 rounded-4 shadow-lg">
+              <div class="btn-group d-flex justify-content-center mb-3" role="group">
+                <button type="button"
+                        class="btn btn-light px-4 fw-semibold active"
+                        data-mode="talent">Find talent</button>
+                <button type="button"
+                        class="btn btn-dark px-4 fw-semibold"
+                        data-mode="jobs">Browse jobs</button>
+              </div>
+
+              <div class="input-group">
+                <input type="text"
+                       class="form-control py-3"
+                       placeholder="Search by role, skills, or keywords">
+                <button class="btn btn-success px-4 fw-bold">Search</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ----------  Slide 3  ---------- -->
+      <div class="carousel-item">
+        <div class="hero-bg"
+             style="background-image:url('Resources/photo-1552664730-d307ca884978.avif');">
+          <div class="overlay"></div>
+
+          <div class="hero-content text-white text-start">
+            <h1 class="hero-title display-4 fw-bold">
+              Turn Your Ideas Into Reality <br> Fast, Easy, and Free.
+            </h1>
+
+            <!-- reuse same search box markup -->
+            <div class="search-box mt-4 p-3 rounded-4 shadow-lg">
+              <div class="btn-group d-flex justify-content-center mb-3" role="group">
+                <button type="button"
+                        class="btn btn-light px-4 fw-semibold active"
+                        data-mode="talent">Find talent</button>
+                <button type="button"
+                        class="btn btn-dark px-4 fw-semibold"
+                        data-mode="jobs">Browse jobs</button>
+              </div>
+
+              <div class="input-group">
+                <input type="text"
+                       class="form-control py-3"
+                       placeholder="Search by role, skills, or keywords">
+                <button class="btn btn-success px-4 fw-bold">Search</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div> <!-- /.carousel-inner -->
+
+    <!-- ====================  CONTROLS  ==================== -->
+    <button class="carousel-control-prev opacity-0" type="button"
+            data-bs-target="#landingCarousel" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually‑hidden">Previous</span>
+    </button>
+
+    <button class="carousel-control-next opacity-0" type="button"
+            data-bs-target="#landingCarousel" data-bs-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually‑hidden">Next</span>
+    </button>
+
+  </div> <!-- /#landingCarousel -->
+</section>
+
+
+
     </header>
 
 
@@ -156,7 +211,7 @@
       <div class="row g-4">
         <div class="col-md-4">
           <div class="text-center">
-            <i class="fa fa-search feature-icon"></i>
+            <i class="bi bi-search feature-icon"></i>
             <h4 >Easy Search</h4>
             <p class="text-light">Find jobs that match your skills with our advanced search tools.</p>
           </div>
@@ -206,5 +261,4 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
-
 
