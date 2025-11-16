@@ -1,4 +1,6 @@
 <?php
+define('BASE_URL', '/projectWeb/web/');
+
 // MySQL database credentials
 $host = 'localhost';       // your MySQL host
 $user = 'root';   // your MySQL username

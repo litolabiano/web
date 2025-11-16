@@ -1,3 +1,108 @@
+<?php
+include '../db_connect.php';
+session_start();
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $username = trim($_POST['username'] ?? '');
+    $email = trim($_POST['email'] ?? '');
+    $password = trim($_POST['password'] ?? '');
+    $confirmPassword = trim($_POST['confirmPassword'] ?? '');
+    $termsCheck = isset($_POST['termsCheck']);
+    $role = 'user';
+    $message = '';
+
+    // Validation
+    if (!$termsCheck) {
+        $message = 'You must agree to the Terms and Conditions.';
+    } elseif (empty($username) || empty($email) || empty($password) || empty($confirmPassword)) {
+        $message = 'Please fill in all required fields.';
+    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $message = 'Please enter a valid email address.';
+    } elseif (strlen($password) < 8 || !preg_match('/[a-zA-Z]/', $password)) {
+        $message = 'Password must be at least 8 characters and include letters.';
+    } elseif ($password !== $confirmPassword) {
+        $message = 'Passwords do not match.';
+    } else {
+        // Check duplicates
+        $stmt = mysqli_prepare($conn, "SELECT id FROM users WHERE username = ? OR email = ?");
+        mysqli_stmt_bind_param($stmt, 'ss', $username, $email);
+        mysqli_stmt_execute($stmt);
+        mysqli_stmt_store_result($stmt);
+
+        if (mysqli_stmt_num_rows($stmt) > 0) {
+            $message = 'Username or email already exists.';
+        } else {
+            // Generate OTP
+            $otp = random_int(100000, 999999);
+            $expires = date("Y-m-d H:i:s", strtotime("+5 minutes"));
+
+            $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+
+            // Insert with OTP
+            $stmt = mysqli_prepare($conn, 
+                "INSERT INTO users (username, email, password_hash, role, verificationCode, otpExpiresAt, isVerified) 
+                 VALUES (?, ?, ?, ?, ?, ?, 0)"
+            );
+            mysqli_stmt_bind_param($stmt, 'ssssss', 
+                $username, 
+                $email, 
+                $hashedPassword, 
+                $role, 
+                $otp, 
+                $expires
+            );
+
+            if (mysqli_stmt_execute($stmt)) {
+
+                // --- SEND EMAIL (PHPMailer) ---
+              require __DIR__ . '/PHPMailer-7.0.0/src/PHPMailer.php';
+              require __DIR__ . '/PHPMailer-7.0.0/src/SMTP.php';
+              require __DIR__ . '/PHPMailer-7.0.0/src/Exception.php';
+
+
+                $mail = new PHPMailer\PHPMailer\PHPMailer(true);
+
+                try {
+                    $mail->isSMTP();
+                    $mail->Host = 'smtp.gmail.com';
+                    $mail->SMTPAuth = true;
+                    $mail->Username = 'ljlabianao@gmail.com';
+                    $mail->Password = 'tcoh abrh wxcg blzs';
+                    $mail->SMTPSecure = 'tls';
+                    $mail->Port = 587;
+
+                    $mail->setFrom('ljlabianao@gmail.com', 'WorkHop Verification');
+                    $mail->addAddress($email);
+
+                    $mail->Subject = 'Your WorkHop Verification Code';
+                    $mail->Body = "Your verification code is: $otp\nThis code expires in 5 minutes.";
+
+                    $mail->send();
+                } catch (Exception $e) {
+                    // Optional: Log error but still continue
+                }
+
+                $_SESSION['email_to_verify'] = $email;
+
+                header('Location: verify-otp.php');
+                exit();
+
+            } else {
+                $message = 'Database error: ' . mysqli_error($conn);
+            }
+        }
+        mysqli_stmt_close($stmt);
+    }
+
+    if (!empty($message)) {
+        echo '<div class="alert alert-danger">' . htmlspecialchars($message) . '</div>';
+    }
+}
+
+mysqli_close($conn);
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -44,19 +149,8 @@
       <!-- Dynamic message area for success/error feedback -->
       <div id="message" class="mb-3"></div>
 
-      <form id="registerForm" method="post" action="signup.php" novalidate>
-        <div class="mb-3 position-relative">
-          <input type="text" id="lastName" name="lastName" class="form-control ps-5" placeholder="Last Name" required>
-          <i class="bi bi-person-fill position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"></i>
-        </div>
-        <div class="mb-3 position-relative">
-          <input type="text" id="firstName" name="firstName" class="form-control ps-5" placeholder="First Name" required>
-          <i class="bi bi-person-fill position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"></i>
-        </div>
-        <div class="mb-3 position-relative">
-          <input type="text" id="mi" name="mi" maxlength="1" class="form-control ps-5" placeholder="M.I.">
-          <i class="bi bi-person-badge-fill position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"></i>
-        </div>
+      <form id="registerForm" method="post" action="a-registration.php" novalidate>
+  
         <!-- Added username field (required for database) -->
         <div class="mb-3 position-relative">
           <input type="text" id="username" name="username" class="form-control ps-5" placeholder="Username" required>
@@ -74,14 +168,14 @@
         </div>
         <!-- Added confirm password field -->
         <div class="mb-3 position-relative">
-          <input type="password" id="confirmPassword" class="form-control ps-5 pe-5" placeholder="Confirm Password" required minlength="8">
+          <input type="password" id="confirmPassword" name="confirmPassword" class="form-control ps-5 pe-5" placeholder="Confirm Password" required minlength="8">
           <i class="bi bi-lock-fill position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"></i>
           <i class="bi bi-eye-slash position-absolute top-50 end-0 translate-middle-y me-3 text-muted togglePass" data-target="confirmPassword" style="cursor:pointer;"></i>
         </div>
         <div class="form-check mb-4">
-          <input class="form-check-input" type="checkbox" id="termsCheck" required>
+          <input class="form-check-input" type="checkbox" name="termsCheck" required>
           <label class="form-check-label" for="termsCheck">
-            I agree to the <a href="#" data-bs-toggle="modal" data-bs-target="#termsModal">Terms and Conditions</a>
+            I agree to the <a href="#" data-bs-toggle="modal" data-bs-target="#termsModal">Terms and Conditions and Data Privacy act</a>
           </label>
         </div>
 
@@ -150,73 +244,11 @@
       });
     });
 
-    // Form submission handler with AJAX integration
-    document.getElementById("registerForm").addEventListener("submit", function(e) {
-      e.preventDefault(); // Prevent default form submission (page reload)
 
-      const username = document.getElementById('username').value.trim();
-      const email = document.getElementById('email').value.trim();
-      const password = document.getElementById('password').value.trim();
-      const confirmPassword = document.getElementById('confirmPassword').value.trim();
-      const termsCheck = document.getElementById('termsCheck').checked;
-      const messageDiv = document.getElementById('message');
 
-      // Clear previous messages
-      messageDiv.innerHTML = '';
 
-      // Client-side validation
-      if (!username || !email || !password || !confirmPassword) {
-        messageDiv.innerHTML = '<div class="alert alert-danger">Please fill in all required fields.</div>';
-        return;
-      }
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-        messageDiv.innerHTML = '<div class="alert alert-danger">Please enter a valid email address.</div>';
-        return;
-      }
-      if (password.length < 8 || !/[a-zA-Z]/.test(password)) {
-        messageDiv.innerHTML = '<div class="alert alert-danger">Password must be at least 8 characters and include letters.</div>';
-        return;
-      }
-      if (password !== confirmPassword) {
-        messageDiv.innerHTML = '<div class="alert alert-danger">Passwords do not match!</div>';
-        return;
-      }
-      if (!termsCheck) {
-        messageDiv.innerHTML = '<div class="alert alert-danger">You must agree to the Terms and Conditions.</div>';
-        return;
-      }
 
-      // Prepare data to send to signup.php (only required fields for backend)
-      const formData = new FormData();
-      formData.append('username', username);
-      formData.append('email', email);
-      formData.append('password', password);
-      formData.append('role', 'user'); // Default to 'user' for employees; change if needed
 
-      // Send AJAX request to signup.php
-      fetch('signup.php', {
-          method: 'POST',
-          body: formData
-        })
-        .then(response => response.json()) // Parse JSON response from PHP
-        .then(data => {
-          if (data.success) {
-            // Registration successful: Show message and redirect
-            messageDiv.innerHTML = '<div class="alert alert-success">' + data.message + '</div>';
-            setTimeout(() => {
-              window.location.href = 'a-login.php'; // Redirect to login page
-            }, 1000); // Delay for user to see the message
-          } else {
-            // Registration failed: Show error message
-            messageDiv.innerHTML = '<div class="alert alert-danger">' + data.message + '</div>';
-          }
-        })
-        .catch(error => {
-          // Handle network or other errors
-          console.error('Error:', error);
-          messageDiv.innerHTML = '<div class="alert alert-danger">An error occurred. Please try again.</div>';
-        });
-    });
   </script>
 </body>
 
