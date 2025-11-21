@@ -1,12 +1,72 @@
+<?php
+session_start();
+include '../db_connect.php'; // contains $conn
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    header('Content-Type: text/plain; charset=utf-8'); // ensure plain text response
+
+    $username = trim($_POST['username'] ?? '');
+    $password = trim($_POST['password'] ?? '');
+
+    if ($username === '' || $password === '') {
+        echo "empty";
+        exit;
+    }
+
+    // Fetch user using username or email
+    $sql = "SELECT id, username, email, password_hash, role, isVerified 
+            FROM users 
+            WHERE username = ? OR email = ?
+            LIMIT 1";
+
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("ss", $username, $username);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    // No user found
+    if ($result->num_rows === 0) {
+        echo "invalid";
+        exit;
+    }
+
+    $user = $result->fetch_assoc();
+
+    // Check if account is verified
+    if ($user['isVerified'] == 0) {
+        echo "not_verified";
+        exit;
+    }
+
+    // Verify password using bcrypt
+    if (!password_verify($password, $user['password_hash'])) {
+        echo "invalid";
+        exit;
+    }
+
+    // Save login session
+    $_SESSION['user_id']   = $user['id'];
+    $_SESSION['username']  = $user['username'];
+    $_SESSION['email']     = $user['email'];
+    $_SESSION['role']      = $user['role'];
+
+    echo "success";
+    exit; // prevent HTML from being appended to the response
+}
+?>
+
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-      <?php include '../externalphp/head.php'; ?>
+      <?php include '../include/head.php'; ?>
 
 </head>
 
 <body class="bg-dark-green">
-  <?php include '../externalphp/navabar_login.php'; ?>
+  <?php include '../include/navabar_login.php'; ?>
  
 
         
@@ -23,14 +83,14 @@
     
       
       
-      <form id="loginForm" >
+      <form id="loginForm" method="post" >
      
         <div class="mb-3 position-relative">
-          <input type="text" id="username" class="form-control ps-5" placeholder="Email or Username" required>
+          <input type="text" id="username" name="username" class="form-control ps-5" placeholder="Email or Username" required>
           <i class="bi bi-person-fill position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"></i>
         </div>
         <div class="mb-4 position-relative">
-          <input type="password" id="password" class="form-control ps-5 pe-5" placeholder="Password" required>
+          <input type="password" id="password" name="password" class="form-control ps-5 pe-5" placeholder="Password" required>
           <i class="bi bi-lock-fill position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"></i>
           <i class="bi bi-eye-slash position-absolute top-50 end-0 translate-middle-y me-3 text-muted" id="eyeIcon" style="cursor:pointer;"></i>
         </div>
@@ -63,7 +123,7 @@
     </div>
   </div>
 
-        <?php include '../externalphp/footer.php'; ?>
+        <?php include '../include/footer.php'; ?>
 
 
   
@@ -85,18 +145,35 @@
   }
 });
 
-document.getElementById('loginForm').addEventListener('submit', function (e) {
-  e.preventDefault();
-  const username = document.getElementById('username').value;
-  const password = document.getElementById('password').value;
+document.getElementById('loginForm').addEventListener('submit', async function (e) {
+    e.preventDefault();
 
-  if (username === 'admin' && password === 'admin') {
-    alert('Login successful!');
-    window.location.href = 'dashboard.html';
-  } else {
-    alert('Invalid username or password');
-  }
+    const data = new FormData(this);
+
+    const res = await fetch(window.location.href, { // post to same file
+        method: "POST",
+        body: data
+    });
+
+    const response = await res.text();
+
+    if (response === "success") {
+        window.location.href = "../index.php";
+    } 
+    else if (response === "not_verified") {
+        alert("Your account is not verified. Please check your email.");
+    }
+    else if (response === "invalid") {
+        alert("Incorrect username or password.");
+    }
+    else if (response === "empty") {
+        alert("Please fill in all fields.");
+    }
+    else {
+        alert("Server error.");
+    }
 });
+
   </script>
 </body>
 </html>

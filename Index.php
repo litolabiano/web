@@ -1,14 +1,19 @@
-
+<?php
+require_once __DIR__ . '/include/session.php';
+require_once __DIR__ . '/db_connect.php';
+?>
 <!DOCTYPE html>
 <html lang="en">
+  
 <head>
-      <?php include 'externalphp/head.php'; ?>
+  
+  <?php include 'include/head.php'; ?>
 </head>
 
 
 <body >
-    <?php include 'externalphp/navbar.php'; ?>
-        <?php include 'externalphp/chat.php'; ?>
+    <?php include 'include/navbar.php'; ?>
+      <?php include 'include/chat.php'; ?>
 
     <header>
 <!-- --------------------------------------------------------------
@@ -32,103 +37,64 @@
 
       <!-- ----------  Slide 1  ---------- -->
       <div class="carousel-item active">
-        <div class="hero-bg"
-             style="background-image:url('Resources/photo-1552664730-d307ca884978.avif');">
+        <div class="hero-bg">
           <div class="overlay"></div>
+                    <img src="Resources/photo-1552664730-d307ca884978.avif" alt="">
 
-          <div class="hero-content text-white text-start">
-            <h1 class="hero-title display-4 fw-bold">
-              Turn Your Ideas Into Reality <br> Fast, Easy, and Free.
-            </h1>
 
-            <!-- reuse same search box markup -->
-            <div class="search-box mt-4 p-3 rounded-4 shadow-lg">
-              <div class="btn-group d-flex justify-content-center mb-3" role="group">
-                <button type="button"
-                        class="btn btn-light px-4 fw-semibold active"
-                        data-mode="talent">Find talent</button>
-                <button type="button"
-                        class="btn btn-dark px-4 fw-semibold"
-                        data-mode="jobs">Browse jobs</button>
-              </div>
-
-              <div class="input-group">
-                <input type="text"
-                       class="form-control py-3"
-                       placeholder="Search by role, skills, or keywords">
-                <button class="btn btn-success px-4 fw-bold">Search</button>
-              </div>
-            </div>
-          </div>
+ 
         </div>
       </div>
 
       <!-- ----------  Slide 2  ---------- -->
       <div class="carousel-item">
-        <div class="hero-bg"
-             style="background-image:url('Resources/photo-1522202176988-66273c2fd55f.avif');">
+        <div class="hero-bg">
           <div class="overlay"></div>
+                    <img src="Resources/photo-1522202176988-66273c2fd55f.avif" alt="">
 
-          <div class="hero-content text-white text-start">
-            <h1 class="hero-title display-4 fw-bold">
-              Turn Your Ideas Into Reality <br> Fast, Easy, and Free.
-            </h1>
-     
 
-            <!-- reuse same search box markup -->
-            <div class="search-box mt-4 p-3 rounded-4 shadow-lg">
-              <div class="btn-group d-flex justify-content-center mb-3" role="group">
-                <button type="button"
-                        class="btn btn-light px-4 fw-semibold active"
-                        data-mode="talent">Find talent</button>
-                <button type="button"
-                        class="btn btn-dark px-4 fw-semibold"
-                        data-mode="jobs">Browse jobs</button>
-              </div>
-
-              <div class="input-group">
-                <input type="text"
-                       class="form-control py-3"
-                       placeholder="Search by role, skills, or keywords">
-                <button class="btn btn-success px-4 fw-bold">Search</button>
-              </div>
-            </div>
-          </div>
+  
         </div>
       </div>
 
       <!-- ----------  Slide 3  ---------- -->
-      <div class="carousel-item">
-        <div class="hero-bg"
-             style="background-image:url('Resources/photo-1552664730-d307ca884978.avif');">
+    <div class="carousel-item">
+        <div class="hero-bg">
           <div class="overlay"></div>
+                    <img src="Resources/photo-1552664730-d307ca884978.avif" alt="">
 
-          <div class="hero-content text-white text-start">
-            <h1 class="hero-title display-4 fw-bold">
-              Turn Your Ideas Into Reality <br> Fast, Easy, and Free.
-            </h1>
-
-            <!-- reuse same search box markup -->
-            <div class="search-box mt-4 p-3 rounded-4 shadow-lg">
-              <div class="btn-group d-flex justify-content-center mb-3" role="group">
-                <button type="button"
-                        class="btn btn-light px-4 fw-semibold active"
-                        data-mode="talent">Find talent</button>
-                <button type="button"
-                        class="btn btn-dark px-4 fw-semibold"
-                        data-mode="jobs">Browse jobs</button>
-              </div>
-
-              <div class="input-group">
-                <input type="text"
-                       class="form-control py-3"
-                       placeholder="Search by role, skills, or keywords">
-                <button class="btn btn-success px-4 fw-bold">Search</button>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
+        <!-- Single overlay search box (shared across slides) -->
+         <div class="hero-overlay ">
+                <?php if ($loggedIn): ?>
+              <p class="lead text-start mt-2">Welcome back, <?php echo htmlspecialchars($username); ?>.</p>
+            <?php endif; ?>
+    <h1 class="hero-title display-5 text-start fw-bold">
+              Turn Your Ideas Into Reality <br> Fast, Easy, and Free.
+            </h1>
+    <div class="search-box p-3 rounded-4 shadow-lg">
+      <div class="mb-3 text-end">
+        <?php if ($loggedIn): ?>
+          <a href="new_dashboard.php" class="btn btn-warning fw-semibold">Go to Dashboard</a>
+          <a href="api/a-logout.php" class="btn btn-outline-light ms-2">Log out</a>
+        <?php else: ?>
+          <a href="api/a-login.php" class="btn btn-light fw-semibold me-2">Login</a>
+          <a href="api/a-registration.php" class="btn btn-dark text-white fw-semibold">Sign up</a>
+        <?php endif; ?>
+      </div>
+      <div class="btn-group d-flex justify-content-center mb-3" role="group">
+        <button type="button" class="btn btn-light px-4 fw-semibold active" data-mode="talent">Find talent</button>
+        <button type="button" class="btn btn-dark px-4 fw-semibold" data-mode="jobs">Browse jobs</button>
+      </div>
+
+      <div class="input-group">
+        <input type="text" class="form-control py-3" placeholder="Search by role, skills, or keywords">
+        <button class="btn btn-success px-4 fw-bold">Search</button>
+      </div>
+    </div>
+  </div>
+  
 
     </div> <!-- /.carousel-inner -->
 
@@ -146,17 +112,14 @@
     </button>
 
   </div> <!-- /#landingCarousel -->
+
+
+
 </section>
 
 
 
     </header>
-
-
-
-    
-
-
 
 
   <section class="bg-green w-100 ">
@@ -193,11 +156,6 @@
   </div>
       </section>
       
-
-
-
-
-   
    
     <section class="features p-5">
 
@@ -234,28 +192,7 @@
     </div>
   </section>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
-
-
-
-
-
-
-    <?php include 'externalphp/footer.php'; ?>
+    <?php include 'include/footer.php'; ?>
 
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

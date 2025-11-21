@@ -38,15 +38,15 @@ if ($id) {
 <html lang="en">
 <head>
   <title>Browse Jobs - KLD Job Marketplace</title>
-  <?php include 'externalphp/head.php'; ?>
+  <?php include 'include/head.php'; ?>
   <!-- Bootstrap JS (moved here to load before chat script) -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
   <!-- Bootstrap Icons (added for chat widget) -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 </head>
 <body>
-  <?php include 'externalphp/chat.php'; ?>
-  <?php include 'externalphp/navbar.php'; ?>
+  <?php include 'include/chat.php'; ?>
+  <?php include 'include/navbar.php'; ?>
 
   <?php if ($id): ?>
     <!-- Detailed view -->
@@ -126,7 +126,7 @@ if ($id) {
     </div>
   <?php endif; ?>
 
-  <?php include 'externalphp/footer.php'; ?>
+  <?php include 'include/footer.php'; ?>
 
   <script>
     function showImage(src) {

@@ -6,7 +6,7 @@
   <title>Data Privacy Act - WorkHop</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-          <?php include 'externalphp/head.php'; ?>
+          <?php include 'include/head.php'; ?>
 
   <style>
     body {

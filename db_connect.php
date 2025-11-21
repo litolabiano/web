@@ -1,30 +1,22 @@
 <?php
-define('BASE_URL', '/projectWeb/web/');
+// Load config safely
+$config = require_once __DIR__ . '/../config/config.php';
 
-// MySQL database credentials
-$host = 'localhost';       // your MySQL host
-$user = 'root';   // your MySQL username
-$password = ''; // your MySQL password
-$database = 'kld_jobs';    // your MySQL database name
+// BASE URL
+define('BASE_URL', $config['BASE_URL']);
 
-// Create connection
-$conn = mysqli_connect($host, $user, $password, $database);
+// Database connection
+$conn = mysqli_connect(
+    $config['DB_HOST'],
+    $config['DB_USER'],
+    $config['DB_PASS'],
+    $config['DB_NAME']
+);
 
-// Check connection
 if (!$conn) {
-    die("Connection failed: " . mysqli_connect_error());
+    error_log("Database connection failed: " . mysqli_connect_error());
+    exit('Database connection error. Please try again later.');
 }
 
-// Create jobs table if it doesn't exist
-$table_sql = "CREATE TABLE IF NOT EXISTS jobs (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    title VARCHAR(255) NOT NULL,
-    description TEXT NOT NULL,
-    budget VARCHAR(100) NOT NULL,
-    posted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-)";
-
-if (!mysqli_query($conn, $table_sql)) {
-    die("Error creating table: " . mysqli_error($conn));
-}
-?>
+// Set charset
+mysqli_set_charset($conn, 'utf8mb4');

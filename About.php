@@ -11,10 +11,10 @@
     <!-- Google Fonts for better typography -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
    
-    <?php include 'externalphp/head.php'; ?>
+    <?php include 'include/head.php'; ?>
 </head>
 <body class="bg-dark-green">
-    <?php include 'externalphp/navbar.php'; ?>
+    <?php include 'include/navbar.php'; ?>
 <section class="profile-hero p-5 ">
 
   <div class="container-fluid modals d-md-none py-5">
@@ -572,7 +572,7 @@
 
 
     <!-- Footer for Additional Decoration -->
-    <?php include 'externalphp/footer.php'; ?>
+    <?php include 'include/footer.php'; ?>
  
 
     <!-- Bootstrap JS CDN -->

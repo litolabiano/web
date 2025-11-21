@@ -4,12 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>WorkHop Forgot Password</title>
-      <?php include '../externalphp/head.php'; ?>
+      <?php include '../include/head.php'; ?>
 
 </head>
 
 <body class="bg-dark-green">
-    <?php include '../externalphp/navabar_login.php'; ?>
+    <?php include '../include/navabar_login.php'; ?>
 
 
   <div class="overlay"></div>
@@ -43,7 +43,7 @@
   <!-- Bootstrap 5.0 JS CDN (optional, for any interactive components if needed) -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
     
-      <?php include '../externalphp/footer.php'; ?>
+      <?php include '../include/footer.php'; ?>
 
 
 </body>

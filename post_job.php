@@ -1,4 +1,7 @@
+
+
 <?php
+
 include 'db_connect.php';
 
 $error = '';
@@ -91,7 +94,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css" />
   <script src="js/script.js"></script>
-  <?php include 'externalphp/head.php'; ?>
+  <?php include 'include/head.php'; ?>
 
 
   <style>
@@ -100,9 +103,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   </style>
 </head>
 <body>
-    <?php include 'externalphp/chat.php'; ?>
+    <?php include 'include/chat.php'; ?>
 
-  <?php include 'externalphp/navbar.php'; ?>
+  <?php include 'include/navbar.php'; ?>
 
   <main>
     <div class="container p-5">
@@ -149,7 +152,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
   </main>
 
-  <?php include 'externalphp/footer.php'; ?>
+  <?php include 'include/footer.php'; ?>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

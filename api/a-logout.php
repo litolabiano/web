@@ -1,3 +1,26 @@
+<?php
+// Do NOT include session.php here
+  define('BASE_URL', '/projectWeb/web/');
+
+
+if (session_status() === PHP_SESSION_NONE) {
+  session_start();
+}
+
+// Unset all session variables
+$_SESSION = [];
+
+// Delete session cookie
+if (ini_get("session.use_cookies")) {
+  $params = session_get_cookie_params();
+  setcookie(session_name(), '', time() - 42000,
+    $params['path'], $params['domain'], $params['secure'], $params['httponly']
+  );
+}
+
+session_destroy();
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,7 +28,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>WorkHop Logout</title>
   
-      <?php include '../externalphp/head.php'; ?>
+      <?php include '../include/head.php'; ?>
 
 
   <style>
@@ -27,7 +50,7 @@
       <div class="d-grid gap-2">
         <a href="a-login.php" class="btn btn-warning fw-bold">Log In Again</a>
         <a href="a-registration.php" class="btn btn-outline-secondary fw-bold">Create New Account</a>
-        <a href="index.php" class="btn btn-outline-secondary fw-bold">Go to Home</a>
+        <a href="../index.php" class="btn btn-outline-secondary fw-bold">Go to Home</a>
       </div>
 
       <div class="text-center mt-4">
@@ -35,11 +58,11 @@
       </div>
     </div>
   </div>
-        <?php include '../externalphp/footer.php'; ?>
+        <?php include '../include/footer.php'; ?>
 
  
   <!-- Bootstrap 5.0 JS CDN (optional, for any interactive components if needed) -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+  <script src="../web/JS/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
   <script>
     // Auto-redirect countdown to login page after 5 seconds
     let timeLeft = 5;
@@ -49,7 +72,7 @@
       countdownElement.textContent = timeLeft;
       if (timeLeft <= 0) {
         clearInterval(timer);
-        window.location.href = 'index.php'; // Redirect to login page
+        window.location.href = '../index.php'; // Redirect to login page
       }
     }, 1000);
   </script>
