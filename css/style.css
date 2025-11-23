@@ -260,14 +260,11 @@ body { font-family: sans-serif; }
 
       
          .hero-section {
-          background-color: var(--kld-yellow);
           width: auto;
           box-shadow: 0 10px 50px rgba(0, 0, 0, 0.3);
           color: white;
-          text-align: center;
           position: relative;
           padding: 20px;
-          border-radius: 20px ;
         }
         
 .hero-bg {
@@ -284,20 +281,53 @@ body { font-family: sans-serif; }
   border-radius: 28px;
   padding: 10px;
 }
+.hero-overlay {
+    background-color: rgba(30, 30, 30, 0.8);
+
+  border-radius: 0px 0px 20px 20px ;
+  width: 100% !important;
+  position: static !important;
+  transform: none !important;
+  left: auto !important;
+  bottom: auto !important;
+  padding: 10px 12px; /* small side padding on mobile */
+}
+
+@media (min-width: 1112px) {
+  .hero-overlay {
+    margin-bottom: 50px;
+    border-radius: 20px;
+        background-color: rgba(30, 30, 30, 0.8);
+
+
+    width: max-content !important;
+    position: absolute !important;
+    left: 50% !important;
+    bottom: 1.75rem !important;
+    transform: translateX(-50%) !important;
+    padding: 25px !important;
+  }
+  .hero-section .carousel-inner{
+          border-radius: 20px !important;
+          overflow: hidden;
+          padding: 0px;
+          background-color: none !important;
+        }
+}
 
 
 
 .overlay {
   position: absolute;
   inset: 0;
-  background-color: rgba(0, 0, 0, 0.2);   
+    background-color: rgba(30, 30, 30, 0.8);
 }
 
 
 .search-box {
-  background-color: rgba(30, 30, 30, 0.8);
   width: 100%;
-  max-width: 600px;
+    background-color: rgba(30, 30, 30, 0.8);
+
 }
 
 .search-box .btn.active {
@@ -379,11 +409,12 @@ body { font-family: sans-serif; }
             
         }
         .hero-section .carousel-inner{
-          border-radius: 20px;
+          border-radius: 20px 20px 0px 0px ;
           overflow: hidden;
           padding: 0px;
           background-color: none !important;
         }
+        
 
 
         .carousel-inner{          
@@ -627,10 +658,12 @@ body { font-family: sans-serif; }
 
         /* Footer for Completeness */
         .footer {
+        
             background: var(--kld-dark-green);
             padding: 20px 0 20px;
             text-align: center;
             border-top: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 99999999999999999999999999999999999;
         }
         .footer p {
             color: #b0b0b0;

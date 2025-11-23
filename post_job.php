@@ -1,7 +1,7 @@
 
 
 <?php
-
+include 'include/session.php';
 include 'db_connect.php';
 
 $error = '';
@@ -84,7 +84,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>

@@ -1,3 +1,7 @@
+    <?php    
+    include '../include/session.php';
+    include '../db_connect.php'; ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,7 +17,7 @@
 
 
   <div class="overlay"></div>
-  <div class="container d-flex justify-content-center align-items-center vh-100">
+  <div class="container d-flex justify-content-center align-items-center my-5">
     <div class="content-box login-card">
       <h1 class="mb-2 text-center fw-bold title">WORK <i>HOP</i></h1>
       <p class="text-center text-muted mb-4"><i>Reset your password</i></p>
@@ -28,6 +32,7 @@
         <button type="submit" class="btn btn-warning w-100 fw-bold">Send Reset Link</button>
         <a href="index.php"  type="submit" class="btn btn-outline-secondary mt-2 w-100 fw-bold">Go Back</a>
       </form>
+      <p id="fp-msg" class="small mt-3 text-center"></p>
 
       <div class="d-flex justify-content-between small mt-4">
         <span class="text-muted">Remember your password?</span>
@@ -42,6 +47,42 @@
 
   <!-- Bootstrap 5.0 JS CDN (optional, for any interactive components if needed) -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+  <script>
+    (function(){
+      const form = document.getElementById('forgotPasswordForm');
+      const msg = document.getElementById('fp-msg');
+      form.addEventListener('submit', function(e){
+        e.preventDefault();
+        const email = document.getElementById('email').value.trim();
+        if(!email){
+          msg.style.color = 'red'; msg.textContent = 'Please enter your email.'; return;
+        }
+
+        msg.style.color = 'black'; msg.textContent = 'Sending...';
+
+        fetch('../forgot_password_process.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: 'email=' + encodeURIComponent(email)
+        })
+        .then(r => r.json())
+        .then(data => {
+          if(data.status === 'success'){
+            msg.style.color = 'green';
+            msg.textContent = data.msg || 'Reset link sent. Check your email.';
+          } else {
+            msg.style.color = 'red';
+            msg.textContent = data.msg || 'Failed to send reset link.';
+          }
+        })
+        .catch(err => {
+          console.error(err);
+          msg.style.color = 'red';
+          msg.textContent = 'Network error. Try again later.';
+        });
+      });
+    })();
+  </script>
     
       <?php include '../include/footer.php'; ?>
 

@@ -203,7 +203,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['verifyOtp'])) {
 <body>
   <?php include '../include/navabar_login.php'; ?>
 
-  <div class="container d-flex justify-content-center align-items-center vh-100">
+  <div class="container d-flex justify-content-center align-items-center my-5">
     <div class="content-box login-card">
       <h1 class="mb-2 text-center fw-bold title">WORK <i>HOP</i></h1>
       <p class="text-center text-muted mb-4"><i>Create Employee Account</i></p>

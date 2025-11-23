@@ -37,7 +37,8 @@ session_destroy();
 </head>
 
 <body class="bg-dark-green">
-    <div class="overlay"></div>
+          <?php include '../include/navabar_login.php'; ?>
+
   <div class="container d-flex justify-content-center align-items-center vh-100">
     <div class="card login-card shadow-lg p-5">
       <h1 class="mb-2 text-center fw-bold title">WORK <i>HOP</i></h1>

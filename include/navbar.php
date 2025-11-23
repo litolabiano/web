@@ -1,6 +1,6 @@
 <?php require_once __DIR__ . '/session.php'; ?>
-<div class="container-fluid sticky-top py-3">
-  <nav class="navbar navbar-expand-lg m-auto rounded-4 navbar-yellow p-3" style="width: 97%;">
+<div class=" sticky-top py-3">
+  <nav class="navbar navbar-expand-lg m-auto rounded-4 navbar-yellow p-3" style="width: 99%;">
     <!-- Brand -->
     <a class="ms-5 navbar-brand fw-bold text-yellow" href="../web/index.php">
       <i class="bi bi-briefcase-fill"></i> WorkHop
@@ -32,18 +32,7 @@
             <a class="nav-link fw-bold" href="../web/index.php">Home</a>
           </li>
   
-          <!-- Services Dropdown -->
-          <li class="nav-item px-1 dropdown">
-            <a class="nav-link fw-bold dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-              aria-expanded="false">
-              Services
-            </a>
-            <ul class="dropdown-menu bg-green">
-              <li><a class="dropdown-item text-yellow fw-bold" href="../web/post_job.php">Post Jobs</a></li>
-              <li><a class="dropdown-item text-yellow fw-bold" href="../web/jobs.php">Available Jobs</a></li>
-            </ul>
-          </li>
-  
+
           <!-- About Us Dropdown -->
           <li class="nav-item px-1 dropdown">
             <a class="nav-link fw-bold dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
@@ -63,8 +52,10 @@
             <a class="nav-link fw-bold btn btn-green dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
               <?php echo htmlspecialchars($username); ?>
             </a>
-            <ul class="dropdown-menu  bg-green">
-              <li><a class="dropdown-item text-yellow fw-bold" href="../web/new_dashboard.php">Dashboard</a></li>
+            <ul class="dropdown-menu bg-green">
+              <?php if (!empty($role) && ($role === 'admin' )): ?>
+                <li><a class="dropdown-item text-yellow fw-bold" href="../web/new_dashboard.php">Dashboard</a></li>
+              <?php endif; ?>
               <li><a class="dropdown-item text-yellow fw-bold" href="../web/api/a-logout.php">Logout</a></li>
             </ul>
           </li>

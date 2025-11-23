@@ -66,7 +66,26 @@ require_once __DIR__ . '/db_connect.php';
         </div>
       </div>
         <!-- Single overlay search box (shared across slides) -->
-         <div class="hero-overlay ">
+     
+  
+
+    </div> <!-- /.carousel-inner -->
+
+    <!-- ====================  CONTROLS  ==================== -->
+    <button class="carousel-control-prev opacity-0" type="button"
+            data-bs-target="#landingCarousel" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually‑hidden">Previous</span>
+    </button>
+
+    <button class="carousel-control-next opacity-0" type="button"
+            data-bs-target="#landingCarousel" data-bs-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually‑hidden">Next</span>
+    </button>
+
+  </div> <!-- /#landingCarousel -->
+    <div class="hero-overlay ">
                 <?php if ($loggedIn): ?>
               <p class="lead text-start mt-2">Welcome back, <?php echo htmlspecialchars($username); ?>.</p>
             <?php endif; ?>
@@ -94,25 +113,6 @@ require_once __DIR__ . '/db_connect.php';
       </div>
     </div>
   </div>
-  
-
-    </div> <!-- /.carousel-inner -->
-
-    <!-- ====================  CONTROLS  ==================== -->
-    <button class="carousel-control-prev opacity-0" type="button"
-            data-bs-target="#landingCarousel" data-bs-slide="prev">
-      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-      <span class="visually‑hidden">Previous</span>
-    </button>
-
-    <button class="carousel-control-next opacity-0" type="button"
-            data-bs-target="#landingCarousel" data-bs-slide="next">
-      <span class="carousel-control-next-icon" aria-hidden="true"></span>
-      <span class="visually‑hidden">Next</span>
-    </button>
-
-  </div> <!-- /#landingCarousel -->
-
 
 
 </section>

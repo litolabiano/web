@@ -70,7 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
  
 
         
-  <div class="container d-flex justify-content-center w-100 align-items-center vh-100">
+  <div class="container d-flex justify-content-center w-100 align-items-center my-5">
     <div class="content-box login-card">
   
         

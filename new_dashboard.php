@@ -1,13 +1,11 @@
+<?php
+require_once __DIR__ . '/db_connect.php';
+require_once __DIR__ . '/include/session.php';
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>New KLD Dashboard</title>
-    <!-- Font Awesome for icons (optional) -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts for Poppins -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <?php include __DIR__ . '/include/head.php'; ?>
     <style>
         /* Your provided CSS, organized and cleaned up */
         :root {
@@ -380,15 +378,19 @@
     </style>
 </head>
 <body>
+    <?php include __DIR__ . '/include/navbar.php'; ?>
     <!-- Sidebar -->
     <nav class="sidebar">
         <ul>
+            <br>
+            <br>
+            <br>
             <li><a href="#" class="active"><i class="fas fa-home"></i> Dashboard</a></li>
             <li><a href="#"><i class="fas fa-briefcase"></i> Jobs</a></li>
             <li><a href="#"><i class="fas fa-users"></i> Clients</a></li>
             <li><a href="#"><i class="fas fa-chart-bar"></i> Analytics</a></li>
             <li><a href="#"><i class="fas fa-cog"></i> Settings</a></li>
-            <li><a href="#"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+            <li><a href="api/a-logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
         </ul>
     </nav>
 
@@ -397,90 +399,196 @@
         <!-- Dashboard Header -->
         <header class="dashboard-header">
             <div class="container" style="position: relative; z-index: 2; text-align: center;">
-                <h1>Welcome to Your New KLD Dashboard</h1>
-                <p>This is a new dashboard page with the same great style.</p>
+                <h1>Welcome to KLD Agency Dashboard</h1>
+                <p>Manage projects, clients, and revenue.</p>
             </div>
         </header>
 
         <!-- Stats Section -->
+        <?php
+        // Initialize fallback values
+        $totalJobs = 0;
+        $activeJobs = 0;
+        $newClients = 0;
+        $completionRate = 0;
+        $recentJobs = [];
+        // Dashboard analytics range (days)
+        $rangeDays = isset($_SESSION['dashboard_range']) ? (int)$_SESSION['dashboard_range'] : 90;
+        // Guard: ensure $conn exists
+        if (isset($conn) && $conn) {
+            // Total jobs
+            $res = mysqli_query($conn, "SELECT COUNT(*) AS cnt FROM jobs");
+            if ($res) { $r = mysqli_fetch_assoc($res); $totalJobs = (int)$r['cnt']; mysqli_free_result($res); }
+
+            // Active jobs (status = 'active')
+            $res = mysqli_query($conn, "SELECT COUNT(*) AS cnt FROM jobs WHERE status='active'");
+            if ($res) { $r = mysqli_fetch_assoc($res); $activeJobs = (int)$r['cnt']; mysqli_free_result($res); }
+
+            // New clients (distinct client_id if column exists) - best-effort
+            $res = @mysqli_query($conn, "SELECT COUNT(DISTINCT id) AS cnt FROM users WHERE status='active' and role='user' " );
+            if ($res) { $r = mysqli_fetch_assoc($res); $newClients = (int)$r['cnt']; mysqli_free_result($res); }
+
+            // Completion rate (completed / total)
+            $completed = 0;
+            $res = mysqli_query($conn, "SELECT COUNT(*) AS cnt FROM jobs WHERE status='completed'");
+            if ($res) { $r = mysqli_fetch_assoc($res); $completed = (int)$r['cnt']; mysqli_free_result($res); }
+            if ($totalJobs > 0) { $completionRate = round(($completed / $totalJobs) * 100); }
+
+            // Recent jobs
+            $res = mysqli_query($conn, "SELECT id, title, description, budget, posted_at FROM jobs ORDER BY id DESC LIMIT 6");
+            if ($res) {
+                while ($row = mysqli_fetch_assoc($res)) { $recentJobs[] = $row; }
+                mysqli_free_result($res);
+            }
+            // Jobs per month for chart (within rangeDays)
+            $jobsPerMonth = [];
+            $stmt = mysqli_prepare($conn, "SELECT DATE_FORMAT(posted_at, '%Y-%m') AS ym, DATE_FORMAT(posted_at, '%b %Y') AS label, COUNT(*) AS cnt FROM jobs WHERE posted_at >= DATE_SUB(NOW(), INTERVAL ? DAY) GROUP BY ym ORDER BY ym ASC");
+            if ($stmt) {
+                mysqli_stmt_bind_param($stmt, 'i', $rangeDays);
+                mysqli_stmt_execute($stmt);
+                $res = mysqli_stmt_get_result($stmt);
+                if ($res) {
+                    while ($r = mysqli_fetch_assoc($res)) { $jobsPerMonth[] = $r; }
+                    mysqli_free_result($res);
+                }
+                mysqli_stmt_close($stmt);
+            }
+
+            // Top jobs by number of applicants (if table exists)
+            $topApplied = [];
+            $sql = "SELECT j.id, j.title, COUNT(a.id) AS applicants FROM jobs j LEFT JOIN job_applications a ON a.job_id = j.id GROUP BY j.id ORDER BY applicants DESC LIMIT 5";
+            $res = @mysqli_query($conn, $sql);
+            if ($res) {
+                while ($r = mysqli_fetch_assoc($res)) { $topApplied[] = $r; }
+                mysqli_free_result($res);
+            }
+        }
+        ?>
         <section class="stats-grid">
             <div class="stat-card">
-                <div class="stat-number">$7,890</div>
-                <div class="stat-label">Total Earnings</div>
+                <div class="stat-number"><?php echo htmlspecialchars(number_format($totalJobs)); ?></div>
+                <div class="stat-label">Total jobs</div>
             </div>
             <div class="stat-card">
-                <div class="stat-number">15</div>
-                <div class="stat-label">Active Jobs</div>
+                <div class="stat-number"><?php echo htmlspecialchars(number_format($activeJobs)); ?></div>
+                <div class="stat-label">Active jobs</div>
             </div>
             <div class="stat-card">
-                <div class="stat-number">10</div>
-                <div class="stat-label">New Clients</div>
+                <div class="stat-number"><?php echo htmlspecialchars(number_format($newClients)); ?></div>
+                <div class="stat-label">Active users</div>
             </div>
             <div class="stat-card">
-                <div class="stat-number">98%</div>
-                <div class="stat-label">Completion Rate</div>
+                <div class="stat-number"><?php echo htmlspecialchars($completionRate); ?>%</div>
+                <div class="stat-label">Project Completion</div>
             </div>
         </section>
 
         <!-- Quick Actions -->
         <div style="margin-bottom: 40px; text-align: center;">
-            <a href="#" class="btn-green" style="margin: 0 10px;"><i class="fas fa-plus"></i> New Job</a>
-            <a href="#" class="btn-green" style="margin: 0 10px;"><i class="fas fa-search"></i> Search Clients</a>
-            <a href="#" class="btn-green" style="margin: 0 10px;"><i class="fas fa-download"></i> Export Report</a>
+            <a href="post_job.php" class="btn-green" style="margin: 0 10px;"><i class="fas fa-plus"></i> New Project</a>
+            <a href="jobs.php" class="btn-green" style="margin: 0 10px;"><i class="fas fa-search"></i> Search Projects</a>
+            <a href="#" class="btn-green" id="exportReportBtn" style="margin: 0 10px;"><i class="fas fa-download"></i> Export Projects</a>
         </div>
 
         <!-- Chart Section -->
         <section class="chart-container">
             <h3 style="color: var(--kld-green); margin-bottom: 20px;">Earnings Overview (New)</h3>
-            <div class="bar-chart">
-                <div class="bar">
-                    <div class="bar-label">May</div>
-                </div>
-                <div class="bar">
-                    <div class="bar-label">June</div>
-                </div>
-                <div class="bar">
-                    <div class="bar-label">July</div>
-                </div>
-                <div class="bar">
-                    <div class="bar-label">August</div>
+            <div class="d-flex align-items-center justify-content-between mb-2">
+                <div>
+                    <small class="text-muted">Showing analytics for last</small>
+                    <select id="analyticsRange" class="form-select form-select-sm d-inline-block" style="width:auto; margin-left:8px;">
+                        <option value="30"<?php echo $rangeDays===30? ' selected' : ''; ?>>30 days</option>
+                        <option value="90"<?php echo $rangeDays===90? ' selected' : ''; ?>>90 days</option>
+                        <option value="365"<?php echo $rangeDays===365? ' selected' : ''; ?>>365 days</option>
+                    </select>
                 </div>
             </div>
+            <div class="bar-chart" id="jobsBarChart">
+                <?php if (!empty($jobsPerMonth)): ?>
+                    <?php foreach ($jobsPerMonth as $m): ?>
+                        <div class="bar" data-value="<?php echo (int)$m['cnt']; ?>"><div class="bar-label"><?php echo htmlspecialchars($m['label']); ?></div></div>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <div class="text-muted">No data for selected range.</div>
+                <?php endif; ?>
+            </div>
+        </section>
+
+        <!-- Analytics: top applied jobs -->
+        <section class="chart-container">
+            <h3 style="color: var(--kld-green); margin-bottom: 12px;">Top Applied Projects</h3>
+            <?php if (!empty($topApplied)): ?>
+                <ul class="list-group">
+                    <?php foreach ($topApplied as $t): ?>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <div><?php echo htmlspecialchars($t['title']); ?></div>
+                            <span class="badge bg-primary rounded-pill"><?php echo (int)$t['applicants']; ?></span>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            <?php else: ?>
+                <div class="text-muted">No application data available.</div>
+            <?php endif; ?>
         </section>
 
         <!-- Recent Jobs Section -->
         <section>
-            <h3 style="color: var(--kld-green); margin-bottom: 20px;">New Opportunities</h3>
-            <div class="jobs-grid">
-                <div class="job-card">
-                    <div class="card-body">
-                        <h5 class="card-title">Mobile App UI/UX</h5>
-                        <p class="card-text">Design a modern and intuitive user interface for a new mobile application.</p>
-                        <div class="card-footer">
-                            <i class="fas fa-clock"></i> Due in 5 days | $2,500
+            <h3 style="color: var(--kld-green); margin-bottom: 20px;">Recent Projects</h3>
+            <div class="jobs-grid" id="jobsGrid">
+                <?php if (!empty($recentJobs)): ?>
+                    <?php foreach ($recentJobs as $job): ?>
+                        <div class="job-card" data-title="<?php echo htmlspecialchars($job['title']); ?>" data-desc="<?php echo htmlspecialchars($job['description']); ?>">
+                            <div class="card-body">
+                                <h5 class="card-title"><?php echo htmlspecialchars($job['title']); ?></h5>
+                                <p class="card-text"><?php echo htmlspecialchars(mb_strimwidth($job['description'], 0, 160, '...')); ?></p>
+                                <div class="card-footer">
+                                    <i class="fas fa-clock"></i>
+                                    <?php echo isset($job['created_at']) ? date('M j, Y', strtotime($job['created_at'])) : ''; ?>
+                                    <?php if (!empty($job['budget'])): ?> | <?php echo htmlspecialchars($job['budget']); ?><?php endif; ?>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
-                <div class="job-card">
-                    <div class="card-body">
-                        <h5 class="card-title">Database Optimization</h5>
-                        <p class="card-text">Review and optimize a large-scale database for performance and scalability.</p>
-                        <div class="card-footer">
-                            <i class="fas fa-clock"></i> Due in 2 weeks | $3,000
-                        </div>
-                    </div>
-                </div>
-                <div class="job-card">
-                    <div class="card-body">
-                        <h5 class="card-title">SEO Content Writing</h5>
-                        <p class="card-text">Create high-quality, SEO-friendly content for a company blog.</p>
-                        <div class="card-footer">
-                            <i class="fas fa-clock"></i> Ongoing | $500/month
-                        </div>
-                    </div>
-                </div>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <div class="col-12">No recent projects found.</div>
+                <?php endif; ?>
             </div>
         </section>
+        <?php if (isset($conn) && $conn): ?>
+        <script>
+            // small export example: download recent jobs CSV client-side
+            document.getElementById('exportReportBtn').addEventListener('click', function (e) {
+                e.preventDefault();
+                const rows = [];
+                <?php foreach ($recentJobs as $rj): ?>
+                    rows.push([<?php echo json_encode($rj['id']); ?>, <?php echo json_encode($rj['title']); ?>, <?php echo json_encode(strip_tags($rj['description'])); ?>, <?php echo json_encode($rj['budget']); ?>, <?php echo json_encode($rj['created_at']); ?>]);
+                <?php endforeach; ?>
+                if (rows.length === 0) { alert('No data to export'); return; }
+                let csv = 'ProjectID,Title,Description,Budget,Created\n';
+                rows.forEach(r => { csv += r.map(v => '"' + String(v).replace(/"/g, '""') + '"').join(',') + '\n'; });
+                const blob = new Blob([csv], {type: 'text/csv'});
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a'); a.href = url; a.download = 'recent_projects.csv'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+            });
+            // Analytics range change
+            const analyticsRange = document.getElementById('analyticsRange');
+            if (analyticsRange) {
+                analyticsRange.addEventListener('change', function () {
+                    const val = parseInt(this.value, 10) || 90;
+                    fetch('api/dashboard_settings.php', {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                        body: 'range=' + encodeURIComponent(val)
+                    }).then(r => r.json()).then(data => {
+                        if (data && data.success) {
+                            // reload to fetch new analytics
+                            location.reload();
+                        }
+                    }).catch(() => { alert('Unable to save settings'); });
+                });
+            }
+        </script>
+        <?php endif; ?>
     </div>
 </body>
 </html>

@@ -1,4 +1,4 @@
- <div class="container-fluid sticky-top py-3">
+ <div class=" sticky-top py-3">
   <nav class="navbar navbar-expand-lg m-auto rounded-4 navbar-yellow p-3" style="width: 97%;">
     <!-- Brand -->
     <a class="ms-5 navbar-brand fw-bold text-yellow" href="../index.php">
